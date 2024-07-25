@@ -1,4 +1,4 @@
-import AppointmentForms from "@/components/forms/AppointmentForms";
+import { AppointmentForms } from "@/components/forms/AppointmentForms";
 import { getPatient } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 
