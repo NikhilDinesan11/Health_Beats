@@ -1,77 +1,42 @@
-import React from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { getAppointment } from "@/lib/actions/appointment.actions";
-import { Doctors } from "@/constants";
-import { formatDateTime } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
-const Success = async ({
-  params: { userId },
-  searchParams,
-}: SearchParamProps) => {
-  const appointmentId = (searchParams?.appointmentId as string) || "";
-  const appointment = await getAppointment(appointmentId);
+import { AppointmentForms } from "@/components/forms/AppointmentForms";
+import { getPatient } from "@/lib/actions/patient.actions";
 
-  const doctor = Doctors.find(
-    (doc) => doc.name === appointment.primaryPhysician
-  );
+const Appointment = async ({ params: { userId } }: SearchParamProps) => {
+  const patient = await getPatient(userId);
+
   return (
-    <div className="flex h-screen max-h-screen px-[5%]">
-      <div className="success-img">
-        <Link href="/">
+    <div className="flex h-screen max-h-screen">
+      <section className="remove-scrollbar container my-auto">
+        <div className="sub-container max-w-[860px] flex-1 justify-between">
           <Image
             src="/assets/icons/logo-full.svg"
             height={1000}
             width={1000}
             alt="logo"
-            className="h-10 w-fit"
+            className="mb-12 h-10 w-fit"
           />
-        </Link>
-        <section className="flex flex-col items-center">
-          <Image
-            src="/assets/gifs/success.gif"
-            height={300}
-            width={280}
-            alt="success"
+
+          <AppointmentForms
+            patientId={patient?.$id}
+            userId={userId}
+            type="create"
           />
-          <h2 className="header mb-6 max-w-[600px] text-center">
-            Your <span className="text-green-500">appointment request</span> has
-            been successfully submitted
-          </h2>
-          <p>We'll be in touch shortly to confirm</p>
-        </section>
-        <section className="request-details">
-          <p>Requested Appointment details: </p>
-          <div className="flex items-center gap-3">
-            <Image
-              src={doctor?.image!}
-              alt="doctor"
-              width={100}
-              height={100}
-              className="size-6"
-            />
-            <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
-          </div>
-          <div className="flex gap-2">
-            <Image
-              src="/assets/icons/calendar.svg"
-              height={24}
-              width={24}
-              alt="calendar"
-            />
-            <p>{formatDateTime(appointment.schedule).dateTime}</p>
-          </div>
-        </section>
-        <Button variant="outline" className="shad-primary-btn" asChild>
-          <Link href={`/patients/${userId}/new-appointment`}>
-            New Appointment
-          </Link>
-        </Button>
-        <p className="copyright mt-10 py-12">© 2024 HealthBeats</p>
-      </div>
+
+          <p className="copyright mt-10 py-12">© 2024 HealthBeats</p>
+        </div>
+      </section>
+
+      <Image
+        src="/assets/images/appointment-img.png"
+        height={1500}
+        width={1500}
+        alt="appointment"
+        className="side-img max-w-[390px] bg-bottom"
+      />
     </div>
   );
 };
 
-export default Success;
+export default Appointment;
